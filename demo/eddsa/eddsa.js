@@ -3,7 +3,7 @@ import fs from "fs";
 const eddsa = await buildEddsa();
 const mimcjs = await buildMimc7();
 const F = mimcjs.F;
-
+ 
 const preimage = [123,456,789];
 const M = mimcjs.multiHash(preimage);
 const prvKey = Buffer.from('1'.toString().padStart(64,'0'), "hex");
