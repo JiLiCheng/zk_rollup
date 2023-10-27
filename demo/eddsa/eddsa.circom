@@ -21,4 +21,4 @@ template VerifyEdDSAMiMC() {
 
 }
 
-//component main{public[bug]} = VerifyEdDSAMiMC();
+component main{public[bug]} = VerifyEdDSAMiMC();
