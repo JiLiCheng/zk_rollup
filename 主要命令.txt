@@ -1,0 +1,59 @@
+mkdir trust_setup
+snarkjs ptn bn128 14 trust_setup/pot12_0000.ptau -v
+snarkjs ptc trust_setup/pot12_0000.ptau  trust_setup/pot12_0001.ptau --name="First contribution" -v
+snarkjs pt2 trust_setup/pot12_0001.ptau  trust_setup/pot12_final.ptau -v
+
+mkdir setup
+mkdir proof
+circom gmr.circom --r1cs --wasm --sym 
+snarkjs g16s gmr.r1cs ../trust_setup/pot12_final.ptau setup/gmr_0000.zkey
+snarkjs zkc  setup/gmr_0000.zkey setup/gmr_final.zkey --name="1st Contributor Name" -v
+snarkjs zkev setup/gmr_final.zkey setup/gmr_vk.json
+snarkjs wc gmr_js/gmr.wasm gmr_input.json gmr_witness.wtns
+snarkjs wej gmr_witness.wtns gmr_witness.json
+
+mkdir setup
+mkdir proof
+circom mimcdemo.circom --r1cs --wasm --sym 
+snarkjs g16s mimcdemo.r1cs ../trust_setup/pot12_final.ptau setup/mimcdemo_0000.zkey
+snarkjs zkc  setup/mimcdemo_0000.zkey setup/mimcdemo_final.zkey --name="1st Contributor Name" -v
+snarkjs zkev setup/mimcdemo_final.zkey setup/mimcdemo_vk.json
+snarkjs wc mimcdemo_js/mimcdemo.wasm mimcdemo_input.json mimcdemo_witness.wtns
+snarkjs wej mimcdemo_witness.wtns mimcdemo_witness.json
+
+
+circom leaf_proof.circom --r1cs --wasm --sym 
+snarkjs g16s leaf_proof.r1cs ../trust_setup/pot12_final.ptau setup/leaf_proof_0000.zkey
+snarkjs zkc  setup/leaf_proof_0000.zkey setup/leaf_proof_final.zkey --name="1st Contributor Name" -v
+snarkjs zkev setup/leaf_proof_final.zkey setup/leaf_proof_vk.json
+snarkjs wc leaf_proof_js/leaf_proof.wasm leaf_proof_input.json leaf_proof_witness.wtns
+snarkjs wej leaf_proof_witness.wtns leaf_proof_witness.json
+snarkjs g16p setup/leaf_proof_final.zkey leaf_proof_witness.wtns proof/proof.json proof/public.json
+snarkjs g16v setup/leaf_proof_vk.json proof/public.json proof/proof.json 
+
+
+mkdir setup
+mkdir proof
+circom eddsa.circom --r1cs --wasm --sym 
+snarkjs g16s eddsa.r1cs ../trust_setup/pot12_final.ptau setup/eddsa_0000.zkey
+snarkjs zkc  setup/eddsa_0000.zkey setup/eddsa_final.zkey --name="1st Contributor Name" -v
+snarkjs zkev setup/eddsa_final.zkey setup/eddsa_vk.json
+snarkjs wc eddsa_js/eddsa.wasm eddsa_input.json eddsa_witness.wtns
+snarkjs wej eddsa_witness.wtns eddsa_witness.json
+snarkjs g16p setup/eddsa_final.zkey eddsa_witness.wtns proof/proof.json proof/public.json
+snarkjs g16v setup/eddsa_vk.json proof/public.json proof/proof.json 
+
+
+mkdir setup
+mkdir proof
+circom zk_rolluptx.circom --r1cs --wasm --sym 
+snarkjs g16s zk_rolluptx.r1cs ../trust_setup/pot12_final.ptau setup/zk_rolluptx_0000.zkey
+snarkjs zkc  setup/zk_rolluptx_0000.zkey setup/zk_rolluptx_final.zkey --name="1st Contributor Name" -v
+snarkjs zkev setup/zk_rolluptx_final.zkey setup/zk_rolluptx_vk.json
+snarkjs wc zk_rolluptx_js/zk_rolluptx.wasm zk_rolluptx_input.json zk_rolluptx_witness.wtns
+snarkjs wej zk_rolluptx_witness.wtns zk_rolluptx_witness.json
+snarkjs g16p setup/zk_rolluptx_final.zkey zk_rolluptx_witness.wtns proof/proof.json proof/public.json
+snarkjs g16v setup/zk_rolluptx_vk.json proof/public.json proof/proof.json
+
+
+
